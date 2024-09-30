@@ -16,23 +16,25 @@ import CodeMirror from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
 import { useState } from "react";
 
-export default function AddJsonDialog() {
+interface AddJsonDialogProps {
+  onSave: (name: string, value: string) => Promise<void>;
+}
+
+export default function AddJsonDialog({ onSave }: AddJsonDialogProps) {
   const [jsonData, setJsonData] = useState("");
   const [jsonName, setJsonName] = useState("");
+  const [openModal, setOpenModel] = useState<boolean>(false);
 
-  const handleSave = () => {
-    console.log({
-      jsonName,
-      jsonData,
-    });
-    return {
-      jsonName,
-      jsonData,
-    };
+  const handleSave = async () => {
+    await onSave(jsonName, jsonData);
+    setOpenModel(false);
+
+    setJsonData("");
+    setJsonName("");
   };
 
   return (
-    <Dialog>
+    <Dialog open={openModal} onOpenChange={setOpenModel}>
       <DialogTrigger asChild>
         <Button>Add JSON Data</Button>
       </DialogTrigger>
@@ -67,7 +69,11 @@ export default function AddJsonDialog() {
                 Close
               </Button>
             </DialogClose>
-            <Button disabled={!jsonName || !jsonData} type="button" onClick={handleSave}>
+            <Button
+              disabled={!jsonName || !jsonData}
+              type="button"
+              onClick={handleSave}
+            >
               Save
             </Button>
           </DialogFooter>

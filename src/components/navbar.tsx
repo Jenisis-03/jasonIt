@@ -2,6 +2,13 @@ import React from "react";
 import Link from "next/link";
 import { ExternalLinkIcon } from "lucide-react";
 import { Button } from "./ui/button";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 
 export default function Navbar() {
   return (
@@ -13,12 +20,24 @@ export default function Navbar() {
             <span className="font-bold">jsonIt</span>
           </Link>
           <nav>
-            <Link href='/dashboard' className="text-sm font -medium text-muted-foreground transition-colors hover:text-foreground">
-            Dashboard
+            <Link
+              href="/dashboard"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Dashboard
             </Link>
           </nav>
         </div>
-        <Button variant="outline">Log In</Button>
+        <div>
+          <SignedOut>
+            <SignInButton mode="modal">
+              <Button variant="outline">Log In</Button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+        </div>
       </div>
     </div>
   );
